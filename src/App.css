@@ -1,38 +1,422 @@
 .App {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.app-header {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  margin-bottom: 40px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.app-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 2.5rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.app-header p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Taste Test Styles */
+.taste-test {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  transition: width 0.3s ease;
+}
+
+.question-counter {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.question-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.question-card h2 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.menu-example {
+  color: #666;
+  margin-bottom: 40px;
+  font-style: italic;
+}
+
+.rating-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.rating-btn {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  background: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rating-btn:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+  transform: scale(1.1);
+}
+
+.rating-labels {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Taste Profile Styles */
+.taste-profile {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.taste-profile h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 40px;
+  font-size: 2rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.taste-item {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.taste-item:hover {
+  transform: translateY(-2px);
+}
+
+.taste-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.taste-emoji {
+  font-size: 1.5rem;
+}
+
+.taste-name {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.rating-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.stars {
+  display: flex;
+}
+
+.star {
+  opacity: 0.3;
+}
+
+.star.filled {
+  opacity: 1;
+}
+
+.rating-text {
+  color: #666;
+  font-weight: bold;
+}
+
+.menu-example {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+}
+
+.secondary-btn {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 13px 28px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+/* Restaurant Recommendations Styles */
+.recommendations {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.recommendations h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.recommendations > p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+.restaurant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.restaurant-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-3px);
+}
+
+.restaurant-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.restaurant-image {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.restaurant-info {
+  flex: 1;
+}
+
+.restaurant-info h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.menu-name {
+  color: #667eea;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.restaurant-desc {
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.match-rate {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.match-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.match-percentage {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.match-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.taste-breakdown h4 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.taste-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px;
+}
+
+.taste-match {
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #ddd;
+}
+
+.taste-match.good-match {
+  background: #f0f8f0;
+  border-left-color: #4CAF50;
+}
+
+.taste-match.poor-match {
+  background: #fff5f5;
+  border-left-color: #f44336;
+}
+
+.taste-label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.rating-comparison {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.match-good {
+  color: #4CAF50;
+}
+
+.match-poor {
+  color: #f44336;
+}
+
+.recommendations-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  
+  .question-card {
+    padding: 30px 20px;
+  }
+  
+  .rating-buttons {
+    gap: 10px;
+  }
+  
+  .rating-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .restaurant-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .taste-comparison {
+    grid-template-columns: 1fr;
   }
 }

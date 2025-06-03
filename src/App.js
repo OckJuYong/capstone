@@ -1,23 +1,51 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import TasteTest from './components/TasteTest';
+import TasteProfile from './components/TasteProfile';
+import RestaurantRecommendations from './components/RestaurantRecommendations';
 import './App.css';
 
 function App() {
+  const [currentStep, setCurrentStep] = useState('test'); // 'test', 'profile', 'recommendations'
+  const [tasteProfile, setTasteProfile] = useState(null);
+
+  const handleTasteTestComplete = (profile) => {
+    setTasteProfile(profile);
+    setCurrentStep('profile');
+  };
+
+  const handleViewRecommendations = () => {
+    setCurrentStep('recommendations');
+  };
+
+  const handleRetakeTest = () => {
+    setCurrentStep('test');
+    setTasteProfile(null);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      <main className="app-main">
+        {currentStep === 'test' && (
+          <TasteTest onComplete={handleTasteTestComplete} />
+        )}
+        
+        {currentStep === 'profile' && tasteProfile && (
+          <TasteProfile 
+            profile={tasteProfile} 
+            onViewRecommendations={handleViewRecommendations}
+            onRetakeTest={handleRetakeTest}
+          />
+        )}
+        
+        {currentStep === 'recommendations' && tasteProfile && (
+          <RestaurantRecommendations 
+            tasteProfile={tasteProfile}
+            onBackToProfile={() => setCurrentStep('profile')}
+            onRetakeTest={handleRetakeTest}
+          />
+        )}
+      </main>
     </div>
   );
 }
