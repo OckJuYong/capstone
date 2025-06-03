@@ -596,7 +596,7 @@ const RestaurantRecommendations = ({ tasteProfile, onBackToProfile, onRetakeTest
         tasteData[taste] = data.rating;
       });
 
-      const response = await fetch('https://port-0-capstone-qdrant-umnqdut2blqqevwyb.sel4.cloudtype.app/recommendations/', {
+      const response = await fetch('https://port-0-capstone-qdrant-umnqdut2blqqevwyb.sel4.cloudtype.app/api/recommendations/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
