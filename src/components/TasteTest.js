@@ -29,9 +29,9 @@ const styles = `
   opacity: 0.9;
 }
 
-/* Taste Test Styles */
-.taste-test {
-  max-width: 600px;
+/* Food Choice Styles */
+.food-choice {
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -50,64 +50,110 @@ const styles = `
   transition: width 0.3s ease;
 }
 
-.question-counter {
+.round-counter {
   text-align: center;
   color: #666;
   margin-bottom: 30px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .question-card {
   background: white;
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 40px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   text-align: center;
+  margin-bottom: 30px;
 }
 
 .question-card h2 {
   color: #333;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 1.8rem;
 }
 
-.menu-example {
+.question-card p {
   color: #666;
   margin-bottom: 40px;
-  font-style: italic;
+  font-size: 1.1rem;
 }
 
-.rating-buttons {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-bottom: 20px;
+.food-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
-.rating-btn {
-  width: 60px;
-  height: 60px;
-  border: 2px solid #ddd;
-  border-radius: 50%;
+.food-option {
   background: white;
-  font-size: 1.5rem;
-  font-weight: bold;
+  border: 3px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.rating-btn:hover {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
-  transform: scale(1.1);
-}
-
-.rating-labels {
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 180px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.food-option:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  border-color: #667eea;
+}
+
+.food-option.selected {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea15, #764ba215);
+  transform: translateY(-5px);
+}
+
+.food-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.food-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.food-description {
   color: #666;
   font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.next-button {
+  display: block;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.next-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.next-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Taste Profile Styles */
@@ -123,6 +169,41 @@ const styles = `
   font-size: 2rem;
 }
 
+.profile-summary {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.profile-summary h3 {
+  color: #667eea;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.selected-foods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.selected-food-tag {
+  background: linear-gradient(135deg, #667eea20, #764ba220);
+  color: #333;
+  padding: 10px 16px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  border: 2px solid #667eea40;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -133,7 +214,7 @@ const styles = `
 .taste-item {
   background: white;
   border-radius: 12px;
-  padding: 20px;
+  padding: 25px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   transition: transform 0.2s ease;
 }
@@ -145,47 +226,52 @@ const styles = `
 .taste-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .taste-emoji {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
 }
 
 .taste-name {
   font-weight: bold;
   color: #333;
+  font-size: 1.2rem;
+}
+
+.taste-bar {
+  width: 100%;
+  height: 14px;
+  background-color: #e0e0e0;
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.taste-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  transition: width 0.8s ease;
+  border-radius: 7px;
+}
+
+.taste-score {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.score-value {
+  font-weight: bold;
+  color: #333;
   font-size: 1.1rem;
 }
 
-.rating-display {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.stars {
-  display: flex;
-}
-
-.star {
-  opacity: 0.3;
-}
-
-.star.filled {
-  opacity: 1;
-}
-
-.rating-text {
+.score-description {
   color: #666;
-  font-weight: bold;
-}
-
-.menu-example {
-  color: #888;
-  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .profile-actions {
@@ -228,187 +314,6 @@ const styles = `
   color: white;
 }
 
-/* Restaurant Recommendations Styles */
-.recommendations {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.recommendations h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 10px;
-  font-size: 2rem;
-}
-
-.recommendations > p {
-  text-align: center;
-  color: #666;
-  margin-bottom: 40px;
-  font-size: 1.1rem;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 1.2rem;
-}
-
-.error {
-  text-align: center;
-  padding: 40px;
-  color: #f44336;
-  font-size: 1.1rem;
-  background: #fff5f5;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.restaurant-list {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin-bottom: 40px;
-}
-
-.restaurant-card {
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease;
-}
-
-.restaurant-card:hover {
-  transform: translateY(-3px);
-}
-
-.restaurant-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 25px;
-}
-
-.restaurant-image {
-  font-size: 3rem;
-  flex-shrink: 0;
-}
-
-.restaurant-info {
-  flex: 1;
-}
-
-.restaurant-info h3 {
-  margin: 0 0 8px 0;
-  color: #333;
-  font-size: 1.5rem;
-}
-
-.menu-name {
-  color: #667eea;
-  font-weight: bold;
-  margin: 0 0 8px 0;
-  font-size: 1.1rem;
-}
-
-.restaurant-desc {
-  color: #666;
-  margin: 0 0 8px 0;
-  line-height: 1.5;
-}
-
-.review-count {
-  color: #888;
-  font-size: 0.9rem;
-}
-
-.match-rate {
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.match-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #4CAF50, #8BC34A);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.match-percentage {
-  color: white;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.match-label {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.taste-breakdown h4 {
-  color: #333;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-}
-
-.taste-comparison {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 10px;
-}
-
-.taste-match {
-  padding: 12px;
-  border-radius: 8px;
-  border-left: 4px solid #ddd;
-}
-
-.taste-match.good-match {
-  background: #f0f8f0;
-  border-left-color: #4CAF50;
-}
-
-.taste-match.poor-match {
-  background: #fff5f5;
-  border-left-color: #f44336;
-}
-
-.taste-label {
-  display: block;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.rating-comparison {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.match-good {
-  color: #4CAF50;
-}
-
-.match-poor {
-  color: #f44336;
-}
-
-.recommendations-actions {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
 @media (max-width: 768px) {
   .App {
     padding: 10px;
@@ -418,318 +323,331 @@ const styles = `
     font-size: 2rem;
   }
   
-  .question-card {
-    padding: 30px 20px;
+  .food-options {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
   }
   
-  .rating-buttons {
-    gap: 10px;
+  .food-option {
+    padding: 20px 15px;
+    min-height: 160px;
   }
   
-  .rating-btn {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
+  .food-emoji {
+    font-size: 2.8rem;
+  }
+  
+  .food-name {
+    font-size: 1.1rem;
   }
   
   .profile-grid {
     grid-template-columns: 1fr;
   }
-  
-  .restaurant-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .taste-comparison {
-    grid-template-columns: 1fr;
-  }
 }
 `;
 
-// TasteTest Component
-const TasteTest = ({ onComplete }) => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState({});
+// 음식별 맛 프로필 데이터 (총 40개)
+const foodTasteProfiles = {
+  // 한식 (15개)
+  '김치찌개': { spicy: 4, sweet: 1, salty: 4, sour: 3, bitter: 1, umami: 5 },
+  '떡볶이': { spicy: 3, sweet: 4, salty: 3, sour: 1, bitter: 1, umami: 2 },
+  '된장찌개': { spicy: 1, sweet: 2, salty: 4, sour: 1, bitter: 2, umami: 5 },
+  '냉면': { spicy: 2, sweet: 2, salty: 2, sour: 4, bitter: 1, umami: 3 },
+  '불고기': { spicy: 1, sweet: 3, salty: 3, sour: 1, bitter: 1, umami: 4 },
+  '비빔밥': { spicy: 2, sweet: 1, salty: 2, sour: 2, bitter: 1, umami: 3 },
+  '삼겹살': { spicy: 1, sweet: 1, salty: 2, sour: 1, bitter: 1, umami: 4 },
+  '갈비탕': { spicy: 1, sweet: 2, salty: 3, sour: 1, bitter: 1, umami: 5 },
+  '김밥': { spicy: 1, sweet: 1, salty: 3, sour: 2, bitter: 1, umami: 3 },
+  '순두부찌개': { spicy: 3, sweet: 1, salty: 3, sour: 1, bitter: 1, umami: 4 },
+  '잡채': { spicy: 1, sweet: 3, salty: 2, sour: 1, bitter: 1, umami: 2 },
+  '김치볶음밥': { spicy: 3, sweet: 2, salty: 3, sour: 2, bitter: 1, umami: 3 },
+  '부대찌개': { spicy: 3, sweet: 1, salty: 4, sour: 1, bitter: 1, umami: 4 },
+  '제육볶음': { spicy: 4, sweet: 2, salty: 3, sour: 1, bitter: 1, umami: 3 },
+  '해물파전': { spicy: 1, sweet: 1, salty: 3, sour: 1, bitter: 1, umami: 4 },
+  
+  // 중식 (8개)
+  '짜장면': { spicy: 1, sweet: 3, salty: 4, sour: 1, bitter: 1, umami: 4 },
+  '짬뽕': { spicy: 2, sweet: 1, salty: 4, sour: 2, bitter: 1, umami: 4 },
+  '탕수육': { spicy: 1, sweet: 5, salty: 2, sour: 3, bitter: 1, umami: 2 },
+  '마라탕': { spicy: 5, sweet: 1, salty: 3, sour: 1, bitter: 2, umami: 4 },
+  '군만두': { spicy: 1, sweet: 1, salty: 3, sour: 1, bitter: 1, umami: 3 },
+  '양장피': { spicy: 1, sweet: 2, salty: 3, sour: 3, bitter: 1, umami: 3 },
+  '깐쇼새우': { spicy: 3, sweet: 4, salty: 2, sour: 2, bitter: 1, umami: 3 },
+  '마파두부': { spicy: 4, sweet: 1, salty: 3, sour: 1, bitter: 1, umami: 4 },
+  
+  // 일식 (7개)
+  '초밥': { spicy: 1, sweet: 2, salty: 2, sour: 2, bitter: 1, umami: 5 },
+  '라멘': { spicy: 2, sweet: 1, salty: 4, sour: 1, bitter: 1, umami: 5 },
+  '돈카츠': { spicy: 1, sweet: 2, salty: 2, sour: 2, bitter: 1, umami: 3 },
+  '우동': { spicy: 1, sweet: 2, salty: 3, sour: 1, bitter: 1, umami: 4 },
+  '연어덮밥': { spicy: 1, sweet: 1, salty: 2, sour: 1, bitter: 1, umami: 4 },
+  '규동': { spicy: 1, sweet: 3, salty: 3, sour: 1, bitter: 1, umami: 4 },
+  '가라아게': { spicy: 1, sweet: 1, salty: 3, sour: 2, bitter: 1, umami: 3 },
+  
+  // 서양식 (10개)
+  '피자': { spicy: 2, sweet: 2, salty: 4, sour: 2, bitter: 1, umami: 4 },
+  '파스타': { spicy: 1, sweet: 2, salty: 3, sour: 2, bitter: 1, umami: 3 },
+  '햄버거': { spicy: 1, sweet: 3, salty: 4, sour: 2, bitter: 1, umami: 3 },
+  '스테이크': { spicy: 1, sweet: 1, salty: 2, sour: 1, bitter: 1, umami: 5 },
+  '치킨': { spicy: 2, sweet: 1, salty: 3, sour: 1, bitter: 1, umami: 3 },
+  '샐러드': { spicy: 1, sweet: 1, salty: 1, sour: 2, bitter: 2, umami: 1 },
+  '샌드위치': { spicy: 1, sweet: 2, salty: 3, sour: 2, bitter: 1, umami: 2 },
+  '리조또': { spicy: 1, sweet: 1, salty: 3, sour: 1, bitter: 1, umami: 4 },
+  '크림파스타': { spicy: 1, sweet: 2, salty: 2, sour: 1, bitter: 1, umami: 3 },
+  '오믈렛': { spicy: 1, sweet: 1, salty: 2, sour: 1, bitter: 1, umami: 3 }
+};
 
-  const questions = [
-    { id: 'spicy', question: '매운 음식을 얼마나 좋아하세요?', menu: '김치찌개' },
-    { id: 'sweet', question: '단맛을 얼마나 좋아하세요?', menu: '떡볶이' },
-    { id: 'salty', question: '짠맛을 얼마나 좋아하세요?', menu: '된장찌개' },
-    { id: 'sour', question: '신맛을 얼마나 좋아하세요?', menu: '냉면' },
-    { id: 'bitter', question: '쓴맛을 얼마나 좋아하세요?', menu: '쌈밥' },
-    { id: 'umami', question: '감칠맛을 얼마나 좋아하세요?', menu: '육개장' }
-  ];
+const foodOptions = [
+  // 한식
+  { id: '김치찌개', emoji: '🍲', name: '김치찌개', description: '매콤하고 진한 국물맛' },
+  { id: '떡볶이', emoji: '🍢', name: '떡볶이', description: '달콤하고 매콤한 분식' },
+  { id: '된장찌개', emoji: '🥣', name: '된장찌개', description: '구수하고 짭짤한 국물' },
+  { id: '냉면', emoji: '🍜', name: '냉면', description: '시원하고 새콤한 면요리' },
+  { id: '불고기', emoji: '🥩', name: '불고기', description: '달콤한 양념에 구운 고기' },
+  { id: '비빔밥', emoji: '🍚', name: '비빔밥', description: '다양한 나물과 고추장' },
+  { id: '삼겹살', emoji: '🥓', name: '삼겹살', description: '고소하고 담백한 돼지고기' },
+  { id: '갈비탕', emoji: '🍲', name: '갈비탕', description: '깔끔하고 진한 사골육수' },
+  { id: '김밥', emoji: '🍙', name: '김밥', description: '다양한 속재료의 조화' },
+  { id: '순두부찌개', emoji: '🍲', name: '순두부찌개', description: '부드럽고 매콤한 찌개' },
+  { id: '잡채', emoji: '🍝', name: '잡채', description: '달콤한 당면 요리' },
+  { id: '김치볶음밥', emoji: '🍚', name: '김치볶음밥', description: '매콤한 김치와 밥의 조화' },
+  { id: '부대찌개', emoji: '🍲', name: '부대찌개', description: '얼큰하고 진한 국물' },
+  { id: '제육볶음', emoji: '🥩', name: '제육볶음', description: '매콤달콤한 돼지고기 볶음' },
+  { id: '해물파전', emoji: '🥞', name: '해물파전', description: '바삭하고 고소한 전' },
+  
+  // 중식
+  { id: '짜장면', emoji: '🍜', name: '짜장면', description: '달콤한 춘장 소스 면' },
+  { id: '짬뽕', emoji: '🍜', name: '짬뽕', description: '얼큰한 해물 국물 면' },
+  { id: '탕수육', emoji: '🍖', name: '탕수육', description: '달콤새콤한 소스 요리' },
+  { id: '마라탕', emoji: '🌶️', name: '마라탕', description: '얼얼하고 매운 중국요리' },
+  { id: '군만두', emoji: '🥟', name: '군만두', description: '바삭하게 구운 만두' },
+  { id: '양장피', emoji: '🥗', name: '양장피', description: '새콤달콤한 냉채 요리' },
+  { id: '깐쇼새우', emoji: '🍤', name: '깐쇼새우', description: '달콤매콤한 새우 요리' },
+  { id: '마파두부', emoji: '🌶️', name: '마파두부', description: '매콤한 두부 요리' },
+  
+  // 일식
+  { id: '초밥', emoji: '🍣', name: '초밥', description: '신선하고 담백한 일식' },
+  { id: '라멘', emoji: '🍜', name: '라멘', description: '진한 육수의 일본 면요리' },
+  { id: '돈카츠', emoji: '🍗', name: '돈카츠', description: '바삭한 튀김옷의 돼지고기' },
+  { id: '우동', emoji: '🍜', name: '우동', description: '쫄깃한 면과 깔끔한 국물' },
+  { id: '연어덮밥', emoji: '🍣', name: '연어덮밥', description: '신선한 연어와 밥' },
+  { id: '규동', emoji: '🍚', name: '규동', description: '달콤한 소고기 덮밥' },
+  { id: '가라아게', emoji: '🍗', name: '가라아게', description: '바삭한 일본식 닭튀김' },
+  
+  // 서양식
+  { id: '피자', emoji: '🍕', name: '피자', description: '치즈가 가득한 이탈리아 요리' },
+  { id: '파스타', emoji: '🍝', name: '파스타', description: '부드럽고 고급스러운 이탈리아 요리' },
+  { id: '햄버거', emoji: '🍔', name: '햄버거', description: '패티와 야채가 들어간 미국 요리' },
+  { id: '스테이크', emoji: '🥩', name: '스테이크', description: '부드럽고 육즙 가득한 고기' },
+  { id: '치킨', emoji: '🍗', name: '치킨', description: '바삭하고 고소한 닭요리' },
+  { id: '샐러드', emoji: '🥗', name: '샐러드', description: '신선한 야채와 드레싱' },
+  { id: '샌드위치', emoji: '🥪', name: '샌드위치', description: '다양한 재료의 조화' },
+  { id: '리조또', emoji: '🍚', name: '리조또', description: '크리미한 이탈리아 쌀요리' },
+  { id: '크림파스타', emoji: '🍝', name: '크림파스타', description: '부드러운 크림 소스 면' },
+  { id: '오믈렛', emoji: '🍳', name: '오믈렛', description: '부드러운 계란 요리' }
+];
 
-  const handleAnswer = (rating) => {
-    const newAnswers = {
-      ...answers,
-      [questions[currentQuestion].id]: {
-        rating,
-        menu: questions[currentQuestion].menu
-      }
-    };
-    setAnswers(newAnswers);
+// FoodChoice Component
+const FoodChoice = ({ onComplete }) => {
+  const [currentRound, setCurrentRound] = useState(1);
+  const [selectedChoices, setSelectedChoices] = useState([]);
+  const [currentOptions, setCurrentOptions] = useState([]);
+  const [usedFoods, setUsedFoods] = useState(new Set());
+  const [selectedOption, setSelectedOption] = useState(null);
 
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+  useEffect(() => {
+    generateNewOptions();
+  }, []);
+
+  const generateNewOptions = () => {
+    const availableFoods = foodOptions.filter(food => !usedFoods.has(food.id));
+    
+    if (availableFoods.length < 4) {
+      // 모든 음식이 사용된 경우, 새로 시작
+      setUsedFoods(new Set());
+      const shuffled = [...foodOptions].sort(() => Math.random() - 0.5);
+      const newOptions = shuffled.slice(0, 4);
+      setCurrentOptions(newOptions);
+      setUsedFoods(new Set(newOptions.map(food => food.id)));
     } else {
-      onComplete(newAnswers);
+      const shuffled = availableFoods.sort(() => Math.random() - 0.5);
+      const newOptions = shuffled.slice(0, 4);
+      setCurrentOptions(newOptions);
+      setUsedFoods(prev => new Set([...prev, ...newOptions.map(food => food.id)]));
+    }
+    
+    setSelectedOption(null);
+  };
+
+  const handleOptionSelect = (foodId) => {
+    setSelectedOption(foodId);
+  };
+
+  const handleNext = () => {
+    if (!selectedOption) return;
+
+    const newChoices = [...selectedChoices, selectedOption];
+    setSelectedChoices(newChoices);
+
+    if (currentRound < 10) {
+      setCurrentRound(currentRound + 1);
+      generateNewOptions();
+    } else {
+      onComplete(newChoices);
     }
   };
 
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const progress = (currentRound / 10) * 100;
 
   return (
-    <div className="taste-test">
+    <div className="food-choice">
       <div className="progress-bar">
         <div className="progress-fill" style={{ width: `${progress}%` }}></div>
       </div>
       
-      <div className="question-counter">
-        {currentQuestion + 1} / {questions.length}
+      <div className="round-counter">
+        라운드 {currentRound} / 10
       </div>
 
       <div className="question-card">
-        <h2>{questions[currentQuestion].question}</h2>
-        <p className="menu-example">예시: {questions[currentQuestion].menu}</p>
-        
-        <div className="rating-buttons">
-          {[1, 2, 3, 4, 5].map(rating => (
-            <button
-              key={rating}
-              className="rating-btn"
-              onClick={() => handleAnswer(rating)}
-            >
-              {rating}
-            </button>
-          ))}
-        </div>
-        
-        <div className="rating-labels">
-          <span>전혀</span>
-          <span>매우 좋아함</span>
-        </div>
+        <h2>🤔 다음 중 가장 먹고 싶은 음식은?</h2>
+        <p>지금 이 순간 가장 끌리는 음식을 선택해주세요!</p>
       </div>
+
+      <div className="food-options">
+        {currentOptions.map((food) => (
+          <div
+            key={food.id}
+            className={`food-option ${selectedOption === food.id ? 'selected' : ''}`}
+            onClick={() => handleOptionSelect(food.id)}
+          >
+            <span className="food-emoji">{food.emoji}</span>
+            <div className="food-name">{food.name}</div>
+            <div className="food-description">{food.description}</div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        className="next-button"
+        onClick={handleNext}
+        disabled={!selectedOption}
+      >
+        {currentRound < 10 ? '다음 라운드 →' : '결과 확인하기 🎯'}
+      </button>
     </div>
   );
 };
 
 // TasteProfile Component
-const TasteProfile = ({ profile, onViewRecommendations, onRetakeTest }) => {
+const TasteProfile = ({ selectedChoices, onRetakeTest }) => {
+  const [tasteProfile, setTasteProfile] = useState({});
+
+  useEffect(() => {
+    analyzeTasteProfile();
+  }, [selectedChoices]);
+
+  const analyzeTasteProfile = () => {
+    const tasteTotals = {
+      spicy: 0, sweet: 0, salty: 0, sour: 0, bitter: 0, umami: 0
+    };
+
+    // 선택한 음식들의 맛 점수를 합산
+    selectedChoices.forEach(foodId => {
+      const foodProfile = foodTasteProfiles[foodId];
+      if (foodProfile) {
+        Object.keys(tasteTotals).forEach(taste => {
+          tasteTotals[taste] += foodProfile[taste];
+        });
+      }
+    });
+
+    // 평균 계산 및 5점 만점으로 정규화
+    const analyzedProfile = {};
+    Object.keys(tasteTotals).forEach(taste => {
+      const average = tasteTotals[taste] / selectedChoices.length;
+      analyzedProfile[taste] = Math.round(average * 10) / 10; // 소수점 1자리까지
+    });
+
+    setTasteProfile(analyzedProfile);
+  };
+
   const getTasteName = (id) => {
     const names = {
-      spicy: '매운맛', sweet: '단맛', salty: '짠맛', sour: '신맛', bitter: '쓴맛', umami: '감칠맛'
+      spicy: '매운맛', sweet: '단맛', salty: '짠맛', 
+      sour: '신맛', bitter: '쓴맛', umami: '감칠맛'
     };
     return names[id];
   };
 
-  const getEmoji = (id, rating) => {
+  const getEmoji = (id) => {
     const emojis = {
-      spicy: ['🫥', '😐', '🙂', '😋', '🔥'],
-      sweet: ['😑', '😐', '🙂', '😊', '🍭'],
-      salty: ['😶', '😐', '🙂', '😋', '🧂'],
-      sour: ['😬', '😐', '🙂', '😋', '🍋'],
-      bitter: ['😵', '😐', '🙂', '😋', '☕'],
-      umami: ['😐', '😐', '🙂', '😋', '🍖']
+      spicy: '🌶️', sweet: '🍯', salty: '🧂', 
+      sour: '🍋', bitter: '☕', umami: '🍖'
     };
-    return emojis[id][rating - 1];
+    return emojis[id];
+  };
+
+  const getScoreDescription = (score) => {
+    if (score >= 4.0) return '매우 높음';
+    if (score >= 3.0) return '높음';
+    if (score >= 2.0) return '보통';
+    if (score >= 1.0) return '낮음';
+    return '매우 낮음';
+  };
+
+  const getSelectedFoodInfo = () => {
+    return selectedChoices.map((id, index) => {
+      const food = foodOptions.find(f => f.id === id);
+      return food ? { ...food, round: index + 1 } : null;
+    }).filter(Boolean);
   };
 
   return (
     <div className="taste-profile">
-      <h2>🎯 당신의 입맛 프로필</h2>
+      <h2>🎯 당신의 입맛 분석 결과</h2>
       
+      <div className="profile-summary">
+        <h3>선택하신 음식들</h3>
+        <div className="selected-foods">
+          {getSelectedFoodInfo().map((food, index) => (
+            <span key={index} className="selected-food-tag">
+              <span>{food.emoji}</span>
+              <span>{food.name}</span>
+            </span>
+          ))}
+        </div>
+        <p>10라운드 동안 선택하신 음식들을 바탕으로 입맛을 분석했어요!</p>
+      </div>
+
       <div className="profile-grid">
-        {Object.entries(profile).map(([id, data]) => (
+        {Object.entries(tasteProfile).map(([id, score]) => (
           <div key={id} className="taste-item">
             <div className="taste-header">
-              <span className="taste-emoji">{getEmoji(id, data.rating)}</span>
+              <span className="taste-emoji">{getEmoji(id)}</span>
               <span className="taste-name">{getTasteName(id)}</span>
             </div>
-            <div className="rating-display">
-              <div className="stars">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className={i < data.rating ? 'star filled' : 'star'}>
-                    ⭐
-                  </span>
-                ))}
-              </div>
-              <span className="rating-text">[{data.rating} / 5]</span>
+            <div className="taste-bar">
+              <div 
+                className="taste-fill" 
+                style={{ width: `${(score / 5) * 100}%` }}
+              ></div>
             </div>
-            <div className="menu-example">예시: {data.menu}</div>
+            <div className="taste-score">
+              <span className="score-value">{score} / 5.0</span>
+              <span className="score-description">{getScoreDescription(score)}</span>
+            </div>
           </div>
         ))}
       </div>
 
       <div className="profile-actions">
-        <button className="primary-btn" onClick={onViewRecommendations}>
-          🍽️ 맞춤 음식 추천 보기
+        <button className="primary-btn" onClick={() => alert('음식 추천 기능은 개발 중입니다!')}>
+          🍽️ 맞춤 음식 추천 받기
         </button>
         <button className="secondary-btn" onClick={onRetakeTest}>
-          🔄 다시 테스트하기
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// RestaurantRecommendations Component
-const RestaurantRecommendations = ({ tasteProfile, onBackToProfile, onRetakeTest }) => {
-  const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchRecommendations();
-  }, [tasteProfile]);
-
-  const fetchRecommendations = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // API로 보낼 입맛 데이터 구성
-      const tasteData = {};
-      Object.entries(tasteProfile).forEach(([taste, data]) => {
-        tasteData[taste] = data.rating;
-      });
-
-      const response = await fetch('https://port-0-capstone-qdrant-umnqdut2blqqevwyb.sel4.cloudtype.app/api/recommendations/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(tasteData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setRecommendations(data);
-    } catch (err) {
-      console.error('API 호출 실패:', err);
-      setError('음식점 추천을 불러오는데 실패했습니다. 다시 시도해주세요.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getRestaurantEmoji = (menu) => {
-    if (menu.includes('치킨') || menu.includes('닭')) return '🍗';
-    if (menu.includes('면') || menu.includes('국수')) return '🍜';
-    if (menu.includes('찌개') || menu.includes('탕')) return '🍲';
-    if (menu.includes('밥') || menu.includes('정식')) return '🍚';
-    if (menu.includes('고기') || menu.includes('불고기')) return '🥩';
-    if (menu.includes('피자')) return '🍕';
-    if (menu.includes('해물') || menu.includes('생선')) return '🐟';
-    return '🍽️';
-  };
-
-  const calculateDisplayMatchRate = (similarityScore) => {
-    // 유사도 점수를 백분율로 변환 (0-1 범위를 0-100으로)
-    return Math.round(similarityScore * 100);
-  };
-
-  if (loading) {
-    return (
-      <div className="recommendations">
-        <h2>🎯 맞춤 음식 추천</h2>
-        <div className="loading">
-          <p>🔍 당신의 입맛에 맞는 음식점을 찾는 중입니다...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="recommendations">
-        <h2>🎯 맞춤 음식 추천</h2>
-        <div className="error">
-          <p>{error}</p>
-          <button className="secondary-btn" onClick={fetchRecommendations} style={{ marginTop: '20px' }}>
-            🔄 다시 시도
-          </button>
-        </div>
-        <div className="recommendations-actions">
-          <button className="secondary-btn" onClick={onBackToProfile}>
-            ⬅️ 프로필로 돌아가기
-          </button>
-          <button className="secondary-btn" onClick={onRetakeTest}>
-            🔄 다시 테스트하기
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="recommendations">
-      <h2>🎯 맞춤 음식 추천</h2>
-      <p>당신의 입맛에 맞는 음식점들을 유사도 순으로 정렬했어요!</p>
-
-      <div className="restaurant-list">
-        {recommendations.map((recommendation, index) => (
-          <div key={index} className="restaurant-card">
-            <div className="restaurant-header">
-              <span className="restaurant-image">{getRestaurantEmoji(recommendation.menu)}</span>
-              <div className="restaurant-info">
-                <h3>{recommendation.restaurant}</h3>
-                <p className="menu-name">{recommendation.menu}</p>
-                <p className="review-count">리뷰 {recommendation.reviewCount}개</p>
-              </div>
-              <div className="match-rate">
-                <div className="match-circle">
-                  <span className="match-percentage">{calculateDisplayMatchRate(recommendation.similarityScore)}%</span>
-                </div>
-                <span className="match-label">매칭률</span>
-              </div>
-            </div>
-
-            <div className="taste-breakdown">
-              <h4>맛 분석</h4>
-              <div className="taste-comparison">
-                {Object.entries(recommendation.tasteProfile).map(([taste, rating]) => {
-                  const userRating = tasteProfile[taste]?.rating || 0;
-                  const difference = Math.abs(userRating - rating);
-                  const isGoodMatch = difference <= 1;
-                  
-                  return (
-                    <div key={taste} className={`taste-match ${isGoodMatch ? 'good-match' : 'poor-match'}`}>
-                      <span className="taste-label">
-                        {taste === 'spicy' ? '매운맛' : 
-                         taste === 'sweet' ? '단맛' :
-                         taste === 'salty' ? '짠맛' :
-                         taste === 'sour' ? '신맛' :
-                         taste === 'bitter' ? '쓴맛' :
-                         taste === 'umami' ? '감칠맛' : taste}
-                      </span>
-                      <div className="rating-comparison">
-                        <span>내 취향: {userRating}/5</span>
-                        <span>음식점: {rating}/5</span>
-                        <span className={isGoodMatch ? 'match-good' : 'match-poor'}>
-                          {isGoodMatch ? '✅' : '❌'}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="recommendations-actions">
-        <button className="secondary-btn" onClick={onBackToProfile}>
-          ⬅️ 프로필로 돌아가기
-        </button>
-        <button className="secondary-btn" onClick={onRetakeTest}>
-          🔄 다시 테스트하기
+          🔄 다시 분석하기
         </button>
       </div>
     </div>
@@ -737,11 +655,11 @@ const RestaurantRecommendations = ({ tasteProfile, onBackToProfile, onRetakeTest
 };
 
 function App() {
-  const [currentStep, setCurrentStep] = useState('test'); // 'test', 'profile', 'recommendations'
-  const [tasteProfile, setTasteProfile] = useState(null);
+  const [currentStep, setCurrentStep] = useState('choice'); // 'choice', 'profile'
+  const [selectedChoices, setSelectedChoices] = useState([]);
 
   // Inject styles
-  React.useEffect(() => {
+  useEffect(() => {
     const styleElement = document.createElement('style');
     styleElement.textContent = styles;
     document.head.appendChild(styleElement);
@@ -750,44 +668,31 @@ function App() {
     };
   }, []);
 
-  const handleTasteTestComplete = (profile) => {
-    setTasteProfile(profile);
+  const handleChoiceComplete = (choices) => {
+    setSelectedChoices(choices);
     setCurrentStep('profile');
   };
 
-  const handleViewRecommendations = () => {
-    setCurrentStep('recommendations');
-  };
-
   const handleRetakeTest = () => {
-    setCurrentStep('test');
-    setTasteProfile(null);
+    setCurrentStep('choice');
+    setSelectedChoices([]);
   };
 
   return (
     <div className="App">
       <header className="app-header">
         <h1>🍽️ 입맛 매칭 음식 추천</h1>
-        <p>당신의 입맛을 분석해서 완벽한 음식을 추천해드려요!</p>
+        <p>10라운드 음식 선택으로 당신만의 입맛을 분석해보세요!</p>
       </header>
 
       <main className="app-main">
-        {currentStep === 'test' && (
-          <TasteTest onComplete={handleTasteTestComplete} />
+        {currentStep === 'choice' && (
+          <FoodChoice onComplete={handleChoiceComplete} />
         )}
         
-        {currentStep === 'profile' && tasteProfile && (
+        {currentStep === 'profile' && selectedChoices.length > 0 && (
           <TasteProfile 
-            profile={tasteProfile} 
-            onViewRecommendations={handleViewRecommendations}
-            onRetakeTest={handleRetakeTest}
-          />
-        )}
-        
-        {currentStep === 'recommendations' && tasteProfile && (
-          <RestaurantRecommendations 
-            tasteProfile={tasteProfile}
-            onBackToProfile={() => setCurrentStep('profile')}
+            selectedChoices={selectedChoices}
             onRetakeTest={handleRetakeTest}
           />
         )}
@@ -797,3 +702,4 @@ function App() {
 }
 
 export default App;
+              
