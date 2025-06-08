@@ -314,6 +314,201 @@ const styles = `
   color: white;
 }
 
+/* Restaurant Recommendations Styles */
+.recommendations {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.recommendations h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.recommendations > p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e0e0e0;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  text-align: center;
+  padding: 40px 20px;
+  color: #f44336;
+  background: #fff5f5;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.restaurant-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.restaurant-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-3px);
+}
+
+.restaurant-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.restaurant-image {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.restaurant-info {
+  flex: 1;
+}
+
+.restaurant-info h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.menu-name {
+  color: #667eea;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.restaurant-desc {
+  color: #666;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.review-count {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.match-rate {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.match-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.match-percentage {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.match-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.taste-breakdown h4 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.taste-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 10px;
+}
+
+.taste-match {
+  padding: 12px;
+  border-radius: 8px;
+  border-left: 4px solid #ddd;
+}
+
+.taste-match.good-match {
+  background: #f0f8f0;
+  border-left-color: #4CAF50;
+}
+
+.taste-match.poor-match {
+  background: #fff5f5;
+  border-left-color: #f44336;
+}
+
+.taste-label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.rating-comparison {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.match-good {
+  color: #4CAF50;
+}
+
+.match-poor {
+  color: #f44336;
+}
+
+.recommendations-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 768px) {
   .App {
     padding: 10px;
@@ -342,6 +537,16 @@ const styles = `
   }
   
   .profile-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .restaurant-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .taste-comparison {
     grid-template-columns: 1fr;
   }
 }
@@ -541,7 +746,7 @@ const FoodChoice = ({ onComplete }) => {
 };
 
 // TasteProfile Component
-const TasteProfile = ({ selectedChoices, onRetakeTest }) => {
+const TasteProfile = ({ selectedChoices, onViewRecommendations, onRetakeTest }) => {
   const [tasteProfile, setTasteProfile] = useState({});
 
   useEffect(() => {
@@ -643,7 +848,7 @@ const TasteProfile = ({ selectedChoices, onRetakeTest }) => {
       </div>
 
       <div className="profile-actions">
-        <button className="primary-btn" onClick={() => alert('음식 추천 기능은 개발 중입니다!')}>
+        <button className="primary-btn" onClick={onViewRecommendations}>
           🍽️ 맞춤 음식 추천 받기
         </button>
         <button className="secondary-btn" onClick={onRetakeTest}>
@@ -654,9 +859,176 @@ const TasteProfile = ({ selectedChoices, onRetakeTest }) => {
   );
 };
 
+// RestaurantRecommendations Component
+const RestaurantRecommendations = ({ tasteProfile, onBackToProfile, onRetakeTest }) => {
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, []);
+
+  const fetchRecommendations = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // tasteProfile을 API 형식에 맞게 변환
+      const tasteData = { ...tasteProfile };
+
+      const response = await fetch('https://port-0-capstone-qdrant-umnqdut2blqqevwyb.sel4.cloudtype.app/api/recommendations/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tasteData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setRecommendations(data);
+    } catch (error) {
+      console.error('추천 데이터를 가져오는 중 오류 발생:', error);
+      setError('추천 데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateMatchRate = (similarityScore) => {
+    return Math.round(similarityScore * 100);
+  };
+
+  const getTasteName = (id) => {
+    const names = {
+      spicy: '매운맛', sweet: '단맛', salty: '짠맛', 
+      sour: '신맛', bitter: '쓴맛', umami: '감칠맛'
+    };
+    return names[id] || id;
+  };
+
+  const getRestaurantEmoji = (restaurantName, menuName) => {
+    // 음식점이나 메뉴에 따라 적절한 이모지 반환
+    if (menuName.includes('치킨') || menuName.includes('닭')) return '🍗';
+    if (menuName.includes('면') || menuName.includes('라면') || menuName.includes('국수')) return '🍜';
+    if (menuName.includes('찌개') || menuName.includes('국') || menuName.includes('탕')) return '🍲';
+    if (menuName.includes('밥') || menuName.includes('덮밥')) return '🍚';
+    if (menuName.includes('고기') || menuName.includes('갈비') || menuName.includes('불고기')) return '🥩';
+    if (menuName.includes('피자')) return '🍕';
+    if (menuName.includes('햄버거')) return '🍔';
+    if (menuName.includes('파스타')) return '🍝';
+    if (menuName.includes('초밥') || menuName.includes('회')) return '🍣';
+    return '🍽️'; // 기본 이모지
+  };
+
+  if (loading) {
+    return (
+      <div className="recommendations">
+        <h2>🎯 맞춤 음식 추천</h2>
+        <div className="loading">
+          <div className="loading-spinner"></div>
+          <p>당신의 입맛에 맞는 음식을 찾고 있어요...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="recommendations">
+        <h2>🎯 맞춤 음식 추천</h2>
+        <div className="error">
+          <p>{error}</p>
+        </div>
+        <div className="recommendations-actions">
+          <button className="primary-btn" onClick={fetchRecommendations}>
+            🔄 다시 시도
+          </button>
+          <button className="secondary-btn" onClick={onBackToProfile}>
+            ⬅️ 프로필로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="recommendations">
+      <h2>🎯 맞춤 음식 추천</h2>
+      <p>당신의 입맛에 맞는 음식점들을 유사도 순으로 정렬했어요!</p>
+
+      <div className="restaurant-list">
+        {recommendations.map((item, index) => (
+          <div key={index} className="restaurant-card">
+            <div className="restaurant-header">
+              <span className="restaurant-image">
+                {getRestaurantEmoji(item.restaurant, item.menu)}
+              </span>
+              <div className="restaurant-info">
+                <h3>{item.restaurant}</h3>
+                <p className="menu-name">{item.menu}</p>
+                <p className="restaurant-desc">
+                  추천 메뉴를 통해 당신의 입맛에 맞는 완벽한 조화를 경험해보세요
+                </p>
+                <p className="review-count">리뷰 {item.reviewCount}개</p>
+              </div>
+              <div className="match-rate">
+                <div className="match-circle">
+                  <span className="match-percentage">
+                    {calculateMatchRate(item.similarityScore)}%
+                  </span>
+                </div>
+                <span className="match-label">매칭률</span>
+              </div>
+            </div>
+
+            <div className="taste-breakdown">
+              <h4>맛 분석</h4>
+              <div className="taste-comparison">
+                {Object.entries(item.tasteProfile).map(([taste, rating]) => {
+                  const userRating = tasteProfile[taste] || 0;
+                  const difference = Math.abs(userRating - rating);
+                  const isGoodMatch = difference <= 1;
+                  
+                  return (
+                    <div key={taste} className={`taste-match ${isGoodMatch ? 'good-match' : 'poor-match'}`}>
+                      <span className="taste-label">{getTasteName(taste)}</span>
+                      <div className="rating-comparison">
+                        <span>내 취향: {userRating.toFixed(1)}/5</span>
+                        <span>음식점: {rating}/5</span>
+                        <span className={isGoodMatch ? 'match-good' : 'match-poor'}>
+                          {isGoodMatch ? '✅' : '❌'}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="recommendations-actions">
+        <button className="secondary-btn" onClick={onBackToProfile}>
+          ⬅️ 프로필로 돌아가기
+        </button>
+        <button className="secondary-btn" onClick={onRetakeTest}>
+          🔄 다시 테스트하기
+        </button>
+      </div>
+    </div>
+  );
+};
+
 function App() {
-  const [currentStep, setCurrentStep] = useState('choice'); // 'choice', 'profile'
+  const [currentStep, setCurrentStep] = useState('choice'); // 'choice', 'profile', 'recommendations'
   const [selectedChoices, setSelectedChoices] = useState([]);
+  const [tasteProfile, setTasteProfile] = useState({});
 
   // Inject styles
   useEffect(() => {
@@ -670,12 +1042,44 @@ function App() {
 
   const handleChoiceComplete = (choices) => {
     setSelectedChoices(choices);
+    // 입맛 분석 로직을 여기서 실행
+    analyzeTasteProfile(choices);
     setCurrentStep('profile');
+  };
+
+  const analyzeTasteProfile = (choices) => {
+    const tasteTotals = {
+      spicy: 0, sweet: 0, salty: 0, sour: 0, bitter: 0, umami: 0
+    };
+
+    // 선택한 음식들의 맛 점수를 합산
+    choices.forEach(foodId => {
+      const foodProfile = foodTasteProfiles[foodId];
+      if (foodProfile) {
+        Object.keys(tasteTotals).forEach(taste => {
+          tasteTotals[taste] += foodProfile[taste];
+        });
+      }
+    });
+
+    // 평균 계산 및 5점 만점으로 정규화
+    const analyzedProfile = {};
+    Object.keys(tasteTotals).forEach(taste => {
+      const average = tasteTotals[taste] / choices.length;
+      analyzedProfile[taste] = Math.round(average * 10) / 10; // 소수점 1자리까지
+    });
+
+    setTasteProfile(analyzedProfile);
+  };
+
+  const handleViewRecommendations = () => {
+    setCurrentStep('recommendations');
   };
 
   const handleRetakeTest = () => {
     setCurrentStep('choice');
     setSelectedChoices([]);
+    setTasteProfile({});
   };
 
   return (
@@ -693,6 +1097,15 @@ function App() {
         {currentStep === 'profile' && selectedChoices.length > 0 && (
           <TasteProfile 
             selectedChoices={selectedChoices}
+            onViewRecommendations={handleViewRecommendations}
+            onRetakeTest={handleRetakeTest}
+          />
+        )}
+        
+        {currentStep === 'recommendations' && Object.keys(tasteProfile).length > 0 && (
+          <RestaurantRecommendations 
+            tasteProfile={tasteProfile}
+            onBackToProfile={() => setCurrentStep('profile')}
             onRetakeTest={handleRetakeTest}
           />
         )}
@@ -702,4 +1115,3 @@ function App() {
 }
 
 export default App;
-              
