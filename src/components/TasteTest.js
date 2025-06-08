@@ -884,12 +884,14 @@ const RestaurantRecommendations = ({ tasteProfile, onBackToProfile, onRetakeTest
         },
         body: JSON.stringify(tasteData)
       });
+      console.log(response.data);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log(data);
       setRecommendations(data);
     } catch (error) {
       console.error('추천 데이터를 가져오는 중 오류 발생:', error);
