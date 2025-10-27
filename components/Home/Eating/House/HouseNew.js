@@ -1,14 +1,14 @@
 // dd 스타일의 집밥 카테고리 페이지
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet } from 'react-native';
-import restaurantData from '../../../../data.json';
+import { mockRestaurants } from '../../../../data/mockRecommendationData';
 
 export default function HouseNew({ route, navigation }) {
   const { selectedCategory } = route.params;
-  const allRestaurants = restaurantData.restaurants;
+  const allRestaurants = mockRestaurants;
 
   const filteredRestaurants = allRestaurants.filter(
-    restaurant => restaurant.category === selectedCategory.id
+    restaurant => restaurant.cuisine === selectedCategory.name || restaurant.cuisine === selectedCategory.id
   );
 
   const navigateToDetail = (restaurant) => {

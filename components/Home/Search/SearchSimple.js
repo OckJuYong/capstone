@@ -1,7 +1,7 @@
 // 간단한 dd 스타일 검색 페이지
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, TextInput, StyleSheet, ScrollView } from 'react-native';
-import restaurantData from '../../../data.json';
+import { mockRestaurants } from '../../../data/mockRecommendationData';
 
 export default function SearchSimple({ navigation }) {
   const [searchText, setSearchText] = useState('');
@@ -17,15 +17,14 @@ export default function SearchSimple({ navigation }) {
       return;
     }
 
-    // 음식점 이름, 카테고리, 대표메뉴로 검색
-    const results = restaurantData.restaurants.filter((restaurant) => {
-      const categoryName = restaurantData.categories.find(c => c.id === restaurant.category)?.name || '';
+    // 음식점 이름, 카테고리, 태그로 검색
+    const results = mockRestaurants.filter((restaurant) => {
       const searchLower = query.toLowerCase();
 
       return (
         restaurant.name.toLowerCase().includes(searchLower) ||
-        categoryName.toLowerCase().includes(searchLower) ||
-        restaurant.specialties.some(s => s.toLowerCase().includes(searchLower))
+        restaurant.cuisine.toLowerCase().includes(searchLower) ||
+        restaurant.tags.some(s => s.toLowerCase().includes(searchLower))
       );
     });
 
@@ -80,7 +79,6 @@ export default function SearchSimple({ navigation }) {
               </View>
             ) : (
               searchResults.map((restaurant) => {
-                const categoryName = restaurantData.categories.find(c => c.id === restaurant.category)?.name || '';
                 return (
                   <TouchableOpacity
                     key={restaurant.id}
@@ -89,16 +87,16 @@ export default function SearchSimple({ navigation }) {
                   >
                     <View style={styles.resultInfo}>
                       <Text style={styles.resultName}>{restaurant.name}</Text>
-                      <Text style={styles.resultCategory}>{categoryName}</Text>
+                      <Text style={styles.resultCategory}>{restaurant.cuisine}</Text>
                       <View style={styles.resultDetails}>
                         <Text style={styles.resultRating}>⭐ {restaurant.rating}</Text>
                         <Text style={styles.resultDot}>•</Text>
-                        <Text style={styles.resultDistance}>{restaurant.distance}</Text>
-                        <Text style={styles.resultDot}>•</Text>
                         <Text style={styles.resultTime}>{restaurant.deliveryTime}</Text>
+                        <Text style={styles.resultDot}>•</Text>
+                        <Text style={styles.resultDistance}>{restaurant.deliveryFee}</Text>
                       </View>
                       <Text style={styles.resultSpecialties}>
-                        {restaurant.specialties.join(', ')}
+                        {restaurant.tags.join(', ')}
                       </Text>
                     </View>
                   </TouchableOpacity>

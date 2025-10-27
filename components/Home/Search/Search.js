@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import restaurantData from '../../../data.json';
+import { mockRestaurants } from '../../../data/mockRecommendationData';
 import styles from './SearchStyles';
 
 export default function Search({ navigation }) {
   const [searchText, setSearchText] = useState('');
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-  
-  const allRestaurants = restaurantData.restaurants;
-  const categories = restaurantData.categories;
+
+  const allRestaurants = mockRestaurants;
 
   useEffect(() => {
     if (searchText === '') {
@@ -16,9 +15,8 @@ export default function Search({ navigation }) {
     } else {
       const filtered = allRestaurants.filter(restaurant => {
         const nameMatch = restaurant.name.toLowerCase().includes(searchText.toLowerCase());
-        const category = categories.find(cat => cat.id === restaurant.category);
-        const categoryMatch = category?.name.toLowerCase().includes(searchText.toLowerCase());
-        const menuMatch = restaurant.specialties.some(menu =>
+        const categoryMatch = restaurant.cuisine.toLowerCase().includes(searchText.toLowerCase());
+        const menuMatch = restaurant.tags.some(menu =>
           menu.toLowerCase().includes(searchText.toLowerCase())
         );
         return nameMatch || categoryMatch || menuMatch;
@@ -29,10 +27,6 @@ export default function Search({ navigation }) {
 
   const navigateToDetail = (restaurant) => {
     navigation.navigate('RestaurantDetail', { restaurant });
-  };
-
-  const getCategoryInfo = (categoryId) => {
-    return categories.find(cat => cat.id === categoryId);
   };
 
   return (
@@ -58,7 +52,6 @@ export default function Search({ navigation }) {
           <ScrollView>
             {filteredRestaurants.length > 0 ? (
               filteredRestaurants.map((restaurant) => {
-                const categoryInfo = getCategoryInfo(restaurant.category);
                 return (
                   <TouchableOpacity
                     key={restaurant.id}
@@ -67,7 +60,7 @@ export default function Search({ navigation }) {
                   >
                     <Text style={styles.restaurantName}>{restaurant.name}</Text>
                     <Text style={styles.restaurantInfo}>
-                      {categoryInfo?.emoji} {categoryInfo?.name}
+                      {restaurant.cuisine}
                     </Text>
                     <Text style={styles.restaurantInfo}>⭐ {restaurant.rating}</Text>
                     <Text style={styles.restaurantInfo}>{restaurant.deliveryTime}</Text>

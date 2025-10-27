@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import styles from './HouseStyles';
-import restaurantData from '../../../../data.json';
+import { mockRestaurants } from '../../../../data/mockRecommendationData';
 
 export default function House({ route, navigation }) {
   const { selectedCategory } = route.params;
-  const allRestaurants = restaurantData.restaurants;
+  const allRestaurants = mockRestaurants;
 
   const filteredRestaurants = allRestaurants.filter(
-    restaurant => restaurant.category === selectedCategory.id
+    restaurant => restaurant.cuisine === selectedCategory.name || restaurant.cuisine === selectedCategory.id
   );
 
   const navigateToDetail = (restaurant) => {

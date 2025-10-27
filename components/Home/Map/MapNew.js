@@ -1,7 +1,20 @@
 // React Native 지도 페이지 - 네이버 지도 스타일
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet, Alert, ActivityIndicator, TextInput, Platform, Animated } from 'react-native';
-import restaurantData from '../../../data.json';
+import { mockRestaurants } from '../../../data/mockRecommendationData';
+
+// mockRestaurants에서 고유한 cuisine 목록 추출하여 categories 생성
+const uniqueCuisines = [...new Set(mockRestaurants.map(r => r.cuisine))];
+const mockCategories = uniqueCuisines.map((cuisine, index) => ({
+  id: cuisine,
+  name: cuisine,
+  emoji: '🍽️'
+}));
+
+const restaurantData = {
+  restaurants: mockRestaurants,
+  categories: mockCategories
+};
 
 // Web에서는 react-native-maps를 사용하지 않음
 let MapView, Marker, PROVIDER_GOOGLE, Location;
@@ -102,10 +115,10 @@ export default function MapNew({ navigation }) {
     }).start();
 
     // 마커 위치로 지도 이동
-    if (mapRef.current && restaurant.location) {
+    if (mapRef.current && restaurant.lat && restaurant.lng) {
       mapRef.current.animateToRegion({
-        latitude: restaurant.location.latitude,
-        longitude: restaurant.location.longitude,
+        latitude: restaurant.lat,
+        longitude: restaurant.lng,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       }, 500);
@@ -151,10 +164,10 @@ export default function MapNew({ navigation }) {
     // 검색어로 음식점 찾기
     const found = filteredRestaurants.find(r =>
       r.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      r.specialties.some(s => s.toLowerCase().includes(searchText.toLowerCase()))
+      r.tags?.some(s => s.toLowerCase().includes(searchText.toLowerCase()))
     );
 
-    if (found && found.location) {
+    if (found && found.lat && found.lng) {
       handleMarkerPress(found);
     } else {
       Alert.alert('검색 결과 없음', '해당하는 음식점을 찾을 수 없습니다.');
@@ -185,7 +198,7 @@ export default function MapNew({ navigation }) {
 
   // 필터링된 음식점 목록
   const filteredRestaurants = selectedCategory
-    ? restaurantData.restaurants.filter(r => r.category === selectedCategory)
+    ? restaurantData.restaurants.filter(r => r.cuisine === selectedCategory)
     : restaurantData.restaurants;
 
   // 하단 시트 높이 애니메이션
@@ -285,19 +298,19 @@ export default function MapNew({ navigation }) {
 
               {/* 음식점 마커들 (필터링됨) */}
               {filteredRestaurants.map((restaurant) => {
-                if (!restaurant.location) return null;
+                if (!restaurant.lat || !restaurant.lng) return null;
 
                 return (
                   <Marker
                     key={restaurant.id}
                     coordinate={{
-                      latitude: restaurant.location.latitude,
-                      longitude: restaurant.location.longitude,
+                      latitude: restaurant.lat,
+                      longitude: restaurant.lng,
                     }}
                     title={restaurant.name}
-                    description={restaurant.category}
+                    description={restaurant.cuisine}
                     onPress={() => handleMarkerPress(restaurant)}
-                    pinColor={getMarkerColor(restaurant.category)}
+                    pinColor={getMarkerColor(restaurant.cuisine)}
                   />
                 );
               })}
@@ -402,9 +415,7 @@ export default function MapNew({ navigation }) {
                 </TouchableOpacity>
               </View>
               <Text style={styles.previewCategory}>
-                {restaurantData.categories.find(c => c.id === selectedRestaurant.category)?.emoji}
-                {' '}
-                {restaurantData.categories.find(c => c.id === selectedRestaurant.category)?.name}
+                🍽️ {selectedRestaurant.cuisine}
               </Text>
             </View>
 
@@ -415,27 +426,15 @@ export default function MapNew({ navigation }) {
               </View>
               <View style={styles.previewDivider} />
               <View style={styles.previewStat}>
-                <Text style={styles.previewStatLabel}>거리</Text>
-                <Text style={styles.previewStatValue}>{selectedRestaurant.distance}</Text>
-              </View>
-              <View style={styles.previewDivider} />
-              <View style={styles.previewStat}>
                 <Text style={styles.previewStatLabel}>배달</Text>
                 <Text style={styles.previewStatValue}>{selectedRestaurant.deliveryTime}</Text>
               </View>
             </View>
 
             <View style={styles.previewInfo}>
-              <Text style={styles.previewInfoLabel}>대표 메뉴</Text>
+              <Text style={styles.previewInfoLabel}>태그</Text>
               <Text style={styles.previewInfoText}>
-                {selectedRestaurant.specialties.join(', ')}
-              </Text>
-            </View>
-
-            <View style={styles.previewInfo}>
-              <Text style={styles.previewInfoLabel}>주소</Text>
-              <Text style={styles.previewInfoText}>
-                {selectedRestaurant.location?.address}
+                {selectedRestaurant.tags?.join(', ')}
               </Text>
             </View>
 
@@ -478,21 +477,12 @@ export default function MapNew({ navigation }) {
                 </View>
 
                 <Text style={styles.restaurantCategory}>
-                  {restaurantData.categories.find(c => c.id === restaurant.category)?.name}
+                  {restaurant.cuisine}
                 </Text>
-
-                {restaurant.location && (
-                  <Text style={styles.restaurantAddress} numberOfLines={1}>
-                    📍 {restaurant.location.address}
-                  </Text>
-                )}
 
                 <View style={styles.restaurantFooter}>
                   <Text style={styles.restaurantInfo}>
                     {restaurant.deliveryTime}
-                  </Text>
-                  <Text style={styles.restaurantInfo}>
-                    • {restaurant.distance}
                   </Text>
                 </View>
               </TouchableOpacity>

@@ -2,7 +2,20 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet, Modal } from 'react-native';
 import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
-import restaurantData from '../../../data.json';
+import { mockRestaurants } from '../../../data/mockRecommendationData';
+
+// mockRestaurants에서 고유한 cuisine 목록 추출하여 categories 생성
+const uniqueCuisines = [...new Set(mockRestaurants.map(r => r.cuisine))];
+const mockCategories = uniqueCuisines.map((cuisine, index) => ({
+  id: cuisine,
+  name: cuisine,
+  emoji: '🍽️'
+}));
+
+const restaurantData = {
+  restaurants: mockRestaurants,
+  categories: mockCategories
+};
 
 // Google Maps API 키 및 Map ID
 const GOOGLE_MAPS_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_KEY || 'AIzaSyCvw-FMFR4P9ReDAaySzos37C6tX0m9aKs';
@@ -52,10 +65,10 @@ export default function MapNew({ navigation }) {
     setShowDetailModal(true);
 
     // 지도 중심을 선택한 음식점으로 이동
-    if (map && restaurant.location) {
+    if (map && restaurant.lat && restaurant.lng) {
       map.panTo({
-        lat: restaurant.location.latitude,
-        lng: restaurant.location.longitude,
+        lat: restaurant.lat,
+        lng: restaurant.lng,
       });
     }
   };
@@ -165,21 +178,21 @@ export default function MapNew({ navigation }) {
         >
           {/* 음식점 마커들 */}
           {restaurantData.restaurants.map((restaurant) => {
-            if (!restaurant.location) return null;
+            if (!restaurant.lat || !restaurant.lng) return null;
 
             return (
               <Marker
                 key={restaurant.id}
                 position={{
-                  lat: restaurant.location.latitude,
-                  lng: restaurant.location.longitude,
+                  lat: restaurant.lat,
+                  lng: restaurant.lng,
                 }}
                 title={restaurant.name}
                 onClick={() => handleMarkerClick(restaurant)}
                 onMouseOver={() => setHoveredRestaurant(restaurant)}
                 onMouseOut={() => setHoveredRestaurant(null)}
                 icon={{
-                  url: getMarkerIcon(restaurant.category),
+                  url: getMarkerIcon(restaurant.cuisine),
                   scaledSize: { width: 32, height: 40 },
                 }}
               >
@@ -189,7 +202,7 @@ export default function MapNew({ navigation }) {
                       <strong style={{ fontSize: '14px' }}>{restaurant.name}</strong>
                       <br />
                       <span style={{ fontSize: '12px' }}>
-                        ⭐ {restaurant.rating} ({restaurant.reviewCount})
+                        ⭐ {restaurant.rating}
                       </span>
                       <br />
                       <span style={{ fontSize: '12px', color: '#666' }}>
@@ -234,21 +247,12 @@ export default function MapNew({ navigation }) {
               </View>
 
               <Text style={styles.restaurantCategory}>
-                {restaurantData.categories.find(c => c.id === restaurant.category)?.name}
+                {restaurant.cuisine}
               </Text>
-
-              {restaurant.location && (
-                <Text style={styles.restaurantAddress} numberOfLines={1}>
-                  📍 {restaurant.location.address}
-                </Text>
-              )}
 
               <View style={styles.restaurantFooter}>
                 <Text style={styles.restaurantInfo}>
                   {restaurant.deliveryTime}
-                </Text>
-                <Text style={styles.restaurantInfo}>
-                  • {restaurant.distance}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -281,14 +285,14 @@ export default function MapNew({ navigation }) {
                   <View style={styles.modalRow}>
                     <Text style={styles.modalLabel}>카테고리</Text>
                     <Text style={styles.modalValue}>
-                      {restaurantData.categories.find(c => c.id === selectedRestaurant.category)?.name}
+                      {selectedRestaurant.cuisine}
                     </Text>
                   </View>
 
                   <View style={styles.modalRow}>
                     <Text style={styles.modalLabel}>평점</Text>
                     <Text style={styles.modalValue}>
-                      ⭐ {selectedRestaurant.rating} ({selectedRestaurant.reviewCount}개 리뷰)
+                      ⭐ {selectedRestaurant.rating}
                     </Text>
                   </View>
 
@@ -300,30 +304,14 @@ export default function MapNew({ navigation }) {
                   <View style={styles.modalRow}>
                     <Text style={styles.modalLabel}>배달비</Text>
                     <Text style={styles.modalValue}>
-                      {selectedRestaurant.deliveryFee.toLocaleString()}원
+                      {selectedRestaurant.deliveryFee}
                     </Text>
                   </View>
-
-                  <View style={styles.modalRow}>
-                    <Text style={styles.modalLabel}>최소주문</Text>
-                    <Text style={styles.modalValue}>
-                      {selectedRestaurant.minOrder.toLocaleString()}원
-                    </Text>
-                  </View>
-
-                  {selectedRestaurant.location && (
-                    <View style={styles.modalRow}>
-                      <Text style={styles.modalLabel}>주소</Text>
-                      <Text style={[styles.modalValue, styles.addressText]}>
-                        {selectedRestaurant.location.address}
-                      </Text>
-                    </View>
-                  )}
 
                   <View style={styles.specialtiesSection}>
-                    <Text style={styles.modalLabel}>대표 메뉴</Text>
+                    <Text style={styles.modalLabel}>태그</Text>
                     <View style={styles.specialtiesList}>
-                      {selectedRestaurant.specialties.map((specialty, index) => (
+                      {selectedRestaurant.tags?.map((specialty, index) => (
                         <View key={index} style={styles.specialtyTag}>
                           <Text style={styles.specialtyText}>{specialty}</Text>
                         </View>
