@@ -1,7 +1,7 @@
 // dd 스타일의 마이페이지
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, SafeAreaView, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { userService, authService } from '../../../services';
+import { userService, authService, couponService } from '../../../services';
 
 export default function MyInfoNew({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -22,6 +22,22 @@ export default function MyInfoNew({ navigation }) {
 
       console.log('✅ 사용자 정보 로드 완료');
       setUser(userInfo);
+
+      // 쿠폰 수 가져오기
+      try {
+        const coupons = await couponService.getMyCoupons();
+        // 사용 가능한 쿠폰만 카운트 (ACTIVE 상태이고 유효기간 내)
+        const availableCoupons = coupons.filter(coupon => {
+          const isActive = coupon.status === 'ACTIVE' && coupon.canUse !== false;
+          const isValid = new Date(coupon.validUntil) > new Date();
+          return isActive && isValid;
+        });
+        setCouponCount(availableCoupons.length);
+        console.log(`🎫 사용 가능 쿠폰: ${availableCoupons.length}장`);
+      } catch (couponError) {
+        console.error('❌ 쿠폰 수 로딩 실패:', couponError);
+        setCouponCount(0);
+      }
 
     } catch (error) {
       console.error('❌ 사용자 정보 로딩 실패:', error);

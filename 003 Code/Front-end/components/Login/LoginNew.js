@@ -212,51 +212,7 @@ export default function LoginNew({ navigation }) {
             />
           </View>
 
-          {/* dd: 로그인/회원가입 탭 "flex justify-center space-x-8" */}
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            gap: theme.spacing[8], // space-x-8 = 32px
-          }}>
-            <TouchableOpacity
-              onPress={() => setActiveTab('login')}
-              style={{
-                paddingBottom: theme.spacing[1], // pb-1 = 4px
-                borderBottomWidth: activeTab === 'login' ? 2 : 0,
-                borderBottomColor: theme.colors.primary, // dd: border-purple-600
-              }}
-            >
-              <Text style={{
-                color: activeTab === 'login' 
-                  ? theme.colors.primary    // dd: text-purple-700
-                  : theme.colors.mutedForeground, // dd: text-gray-500
-                fontWeight: activeTab === 'login' ? '500' : '400', // dd: font-medium
-              }}>
-                로그인
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                setActiveTab('signup');
-                navigation.navigate('Signup');
-              }}
-              style={{
-                paddingBottom: theme.spacing[1],
-                borderBottomWidth: activeTab === 'signup' ? 2 : 0,
-                borderBottomColor: theme.colors.primary,
-              }}
-            >
-              <Text style={{
-                color: activeTab === 'signup' 
-                  ? theme.colors.primary
-                  : theme.colors.mutedForeground,
-                fontWeight: activeTab === 'signup' ? '500' : '400',
-              }}>
-                회원가입
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {/* dd: 로그인/회원가입 탭은 제거 - 혼란 방지 */}
 
           {/* dd: 소셜 로그인 버튼들 "space-y-3" */}
           <View style={{ gap: theme.spacing[3] }}> {/* space-y-3 = 12px */}
@@ -307,6 +263,22 @@ export default function LoginNew({ navigation }) {
               '로그인'
             )}
           </Button>
+
+          {/* 회원가입 링크 */}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Signup')}
+            style={{
+              alignItems: 'center',
+              paddingVertical: theme.spacing[2],
+            }}
+          >
+            <Text style={{
+              color: theme.colors.mutedForeground,
+              fontSize: theme.typography.fontSize.sm,
+            }}>
+              계정이 없으신가요? <Text style={{ color: theme.colors.primary, fontWeight: '500' }}>회원가입</Text>
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScreenLayout>
     </KeyboardAvoidingView>

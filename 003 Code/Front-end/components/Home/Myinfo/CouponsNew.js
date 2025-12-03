@@ -23,17 +23,37 @@ export default function CouponsNew({ navigation }) {
 
       // 백엔드 응답을 프론트엔드 형식으로 변환
       const formattedCoupons = couponsData.map(coupon => {
+        console.log('🎫 쿠폰 데이터:', JSON.stringify(coupon, null, 2));
+
         const expiryDate = new Date(coupon.validUntil || coupon.expiry);
         const isExpired = expiryDate < new Date();
+        const isUsed = coupon.status === 'USED' || coupon.isUsed || isExpired;
+
+        // 할인 금액 포맷팅 (비정상적으로 큰 금액은 표시 수정)
+        const discountAmount = coupon.discountAmount || 0;
+        const discountText = discountAmount > 100000
+          ? `${Math.floor(discountAmount / 10000).toLocaleString()}만원`
+          : `${discountAmount.toLocaleString()}원`;
 
         return {
           id: coupon.id || coupon.userCouponId,
-          name: coupon.name || coupon.couponName,
-          discount: `${coupon.discountAmount?.toLocaleString() || 0}원`,
+          name: coupon.couponName || coupon.name || '할인 쿠폰',
+          discount: discountText,
+          discountAmount: discountAmount,
           minOrder: coupon.minOrderAmount ? `${coupon.minOrderAmount.toLocaleString()}원 이상` : "제한 없음",
           expiry: expiryDate.toISOString().split('T')[0],
-          isUsed: coupon.isUsed || isExpired,
+          isUsed: isUsed,
+          // 추가 정보
+          restaurantName: coupon.restaurantName || null,
+          status: coupon.status || 'ACTIVE',
+          canUse: coupon.canUse !== false && !isUsed,
         };
+      });
+
+      // 사용 가능한 쿠폰을 위로, 할인 금액 순으로 정렬
+      formattedCoupons.sort((a, b) => {
+        if (a.isUsed !== b.isUsed) return a.isUsed ? 1 : -1;
+        return b.discountAmount - a.discountAmount;
       });
 
       setCoupons(formattedCoupons);
@@ -127,14 +147,27 @@ export default function CouponsNew({ navigation }) {
                   ]}>
                     {coupon.name}
                   </Text>
-                  
+
                   <Text style={[
                     styles.couponDiscount,
                     coupon.isUsed && styles.couponDiscountUsed
                   ]}>
-                    {coupon.discount}
+                    {coupon.discount} 할인
                   </Text>
-                  
+
+                  {/* 사용처 (식당 이름) */}
+                  {coupon.restaurantName && (
+                    <View style={styles.restaurantInfo}>
+                      <Text style={styles.restaurantIcon}>🏪</Text>
+                      <Text style={[
+                        styles.restaurantName,
+                        coupon.isUsed && styles.restaurantNameUsed
+                      ]}>
+                        {coupon.restaurantName}
+                      </Text>
+                    </View>
+                  )}
+
                   <View style={styles.couponDetails}>
                     <Text style={[
                       styles.couponCondition,
@@ -313,6 +346,28 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   couponDiscountUsed: {
+    color: '#9ca3af',
+  },
+  restaurantInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f3f4f6',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    marginBottom: 10,
+    alignSelf: 'flex-start',
+  },
+  restaurantIcon: {
+    fontSize: 14,
+    marginRight: 6,
+  },
+  restaurantName: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#374151',
+  },
+  restaurantNameUsed: {
     color: '#9ca3af',
   },
   couponDetails: {

@@ -1,7 +1,7 @@
 // dd 스타일을 적용한 완전한 홈 페이지
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { restaurantService } from '../../services';
+import { restaurantService, userService } from '../../services';
 import { getImageUrl } from '../../constants/images';
 
 export default function HomeUpdated({ navigation }) {
@@ -10,19 +10,35 @@ export default function HomeUpdated({ navigation }) {
   const [restaurants, setRestaurants] = useState([]);
   const [recommendedRestaurants, setRecommendedRestaurants] = useState([]);
   const [trendingRestaurants, setTrendingRestaurants] = useState([]);
+  const [userName, setUserName] = useState('사용자');
 
   // dd와 동일한 데이터
   useEffect(() => {
-    loadRestaurants();
+    loadData();
   }, []);
 
-  const loadRestaurants = async () => {
+  const loadData = async () => {
     try {
-      console.log('🏪 식당 목록 로딩 중...');
+      console.log('🏠 홈 데이터 로딩 중...');
       setLoading(true);
 
-      // restaurantService.getRestaurants() 호출
-      const data = await restaurantService.getRestaurants();
+      // 사용자 정보 로딩 (병렬)
+      const userPromise = userService.getMyInfo().catch(err => {
+        console.error('❌ 사용자 정보 로딩 실패:', err);
+        return null;
+      });
+
+      // 식당 목록 로딩 (병렬)
+      const restaurantsPromise = restaurantService.getRestaurants();
+
+      const [userInfo, data] = await Promise.all([userPromise, restaurantsPromise]);
+
+      // 사용자 이름 설정
+      if (userInfo) {
+        const name = userInfo.name || userInfo.nickname || '사용자';
+        setUserName(name);
+        console.log(`✅ 사용자: ${name}`);
+      }
 
       console.log(`✅ ${data.length}개 식당 로드 완료`);
 
@@ -123,7 +139,7 @@ export default function HomeUpdated({ navigation }) {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* dd: 상단 인사말 섹션 */}
         <View style={styles.greetingSection}>
-          <Text style={styles.greetingText}>안녕하세요, 사용자님!</Text>
+          <Text style={styles.greetingText}>안녕하세요, {userName}님!</Text>
           <Text style={styles.greetingSubText}>오늘은 어떤 메뉴를 추천해 드릴까요?</Text>
         </View>
 
