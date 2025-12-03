@@ -109,9 +109,9 @@ export const signup = async (signupData) => {
       };
     }
 
-    // 실제 API 호출
+    // 실제 API 호출 - 회원가입
     console.log('📝 API: Signup');
-    const token = await api.post(API_CONFIG.ENDPOINTS.AUTH.SIGNUP, {
+    const signupResponse = await api.post(API_CONFIG.ENDPOINTS.AUTH.SIGNUP, {
       name,
       email,
       password,
@@ -119,6 +119,14 @@ export const signup = async (signupData) => {
       address,
       phoneNumber,
       userTaste,
+    });
+
+    console.log('✅ 회원가입 완료, 자동 로그인 시도...');
+
+    // 회원가입 성공 후 자동 로그인 (서버가 토큰을 반환하지 않으므로)
+    const token = await api.post(API_CONFIG.ENDPOINTS.AUTH.LOGIN, {
+      email,
+      password,
     });
 
     // 토큰 저장

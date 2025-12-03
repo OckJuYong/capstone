@@ -93,10 +93,10 @@ export default function RandomNew({ navigation }) {
     } catch (error) {
       console.error('위치 가져오기 에러:', error);
 
-      // 위치를 가져오지 못하면 기본 위치 사용 (강남역)
+      // 위치를 가져오지 못하면 기본 위치 사용 (대전 궁동)
       const defaultLocation = {
-        latitude: 37.4979,
-        longitude: 127.0276,
+        latitude: 36.3620,
+        longitude: 127.3560,
       };
 
       setUserLocation(defaultLocation);

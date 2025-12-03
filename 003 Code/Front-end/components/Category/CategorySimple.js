@@ -24,36 +24,45 @@ export default function CategorySimple({ route, navigation }) {
   const getRestaurantsByCategory = (categoryId) => {
     const restaurantData = {
       korean: [
-        { id: 1, name: "메종 운두부찌개", category: "한식", rating: 4.8, reviews: 109, distance: "1.8km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'korean'), matchPercentage: 95 },
-        { id: 2, name: "할머니 김치찌개", category: "한식", rating: 4.6, reviews: 87, distance: "2.0km", deliveryFee: "2,000원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'korean'), matchPercentage: 89 },
+        { id: 1, name: "메종 운두부찌개", category: "한식", rating: 4.8, reviews: 109, distance: "1.8km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'korean', 1), matchPercentage: 95 },
+        { id: 2, name: "할머니 김치찌개", category: "한식", rating: 4.6, reviews: 87, distance: "2.0km", deliveryFee: "2,000원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'korean', 2), matchPercentage: 89 },
+        { id: 17, name: "숯불갈비 명가", category: "한식", rating: 4.9, reviews: 321, distance: "1.5km", deliveryFee: "3,500원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'korean', 3), matchPercentage: 94 },
+        { id: 18, name: "삼겹살 천국", category: "한식", rating: 4.7, reviews: 198, distance: "1.2km", deliveryFee: "2,500원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'korean', 4), matchPercentage: 91 },
       ],
       chinese: [
-        { id: 3, name: "만리장성", category: "중식", rating: 4.7, reviews: 156, distance: "1.5km", deliveryFee: "2,500원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'chinese'), matchPercentage: 92 },
-        { id: 4, name: "황금성", category: "중식", rating: 4.5, reviews: 203, distance: "2.2km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'chinese'), matchPercentage: 88 },
+        { id: 3, name: "만리장성", category: "중식", rating: 4.7, reviews: 156, distance: "1.5km", deliveryFee: "2,500원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'chinese', 1), matchPercentage: 92 },
+        { id: 4, name: "황금성", category: "중식", rating: 4.5, reviews: 203, distance: "2.2km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'chinese', 2), matchPercentage: 88 },
+        { id: 19, name: "딤섬하우스", category: "중식", rating: 4.6, reviews: 145, distance: "1.8km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'chinese', 3), matchPercentage: 86 },
       ],
       japanese: [
-        { id: 5, name: "스시로", category: "일식", rating: 4.9, reviews: 89, distance: "1.2km", deliveryFee: "2,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'japanese'), matchPercentage: 96 },
-        { id: 6, name: "라멘집", category: "일식", rating: 4.4, reviews: 134, distance: "1.8km", deliveryFee: "2,500원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'japanese'), matchPercentage: 85 },
+        { id: 5, name: "스시로", category: "일식", rating: 4.9, reviews: 89, distance: "1.2km", deliveryFee: "2,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'japanese', 1), matchPercentage: 96 },
+        { id: 6, name: "라멘집", category: "일식", rating: 4.4, reviews: 134, distance: "1.8km", deliveryFee: "2,500원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'japanese', 2), matchPercentage: 85 },
+        { id: 20, name: "돈카츠 명인", category: "일식", rating: 4.7, reviews: 267, distance: "1.6km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'japanese', 3), matchPercentage: 90 },
       ],
       western: [
-        { id: 7, name: "메종 크림 파스타", category: "양식", rating: 4.8, reviews: 109, distance: "1.8km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'western'), matchPercentage: 95 },
-        { id: 8, name: "스테이크 하우스", category: "양식", rating: 4.6, reviews: 76, distance: "2.5km", deliveryFee: "3,500원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'western'), matchPercentage: 90 },
+        { id: 7, name: "메종 크림 파스타", category: "양식", rating: 4.8, reviews: 109, distance: "1.8km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'western', 1), matchPercentage: 95 },
+        { id: 8, name: "스테이크 하우스", category: "양식", rating: 4.6, reviews: 76, distance: "2.5km", deliveryFee: "3,500원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'western', 2), matchPercentage: 90 },
+        { id: 21, name: "샐러드팜", category: "양식", rating: 4.5, reviews: 98, distance: "0.9km", deliveryFee: "2,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'western', 3), matchPercentage: 87 },
       ],
       chicken: [
-        { id: 9, name: "치킨마루", category: "치킨", rating: 4.7, reviews: 234, distance: "1.3km", deliveryFee: "2,000원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'chicken'), matchPercentage: 93 },
-        { id: 10, name: "굽네치킨", category: "치킨", rating: 4.5, reviews: 189, distance: "1.9km", deliveryFee: "2,500원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'chicken'), matchPercentage: 87 },
+        { id: 9, name: "치킨마루", category: "치킨", rating: 4.7, reviews: 234, distance: "1.3km", deliveryFee: "2,000원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'chicken', 1), matchPercentage: 93 },
+        { id: 10, name: "굽네치킨", category: "치킨", rating: 4.5, reviews: 189, distance: "1.9km", deliveryFee: "2,500원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'chicken', 2), matchPercentage: 87 },
+        { id: 22, name: "양념치킨 본점", category: "치킨", rating: 4.8, reviews: 312, distance: "1.1km", deliveryFee: "2,000원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'chicken', 3), matchPercentage: 92 },
       ],
       pizza: [
-        { id: 11, name: "피자나라", category: "피자", rating: 4.5, reviews: 87, distance: "2.0km", deliveryFee: "2,000원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'pizza'), matchPercentage: 89 },
-        { id: 12, name: "도미노피자", category: "피자", rating: 4.3, reviews: 156, distance: "1.7km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'pizza'), matchPercentage: 84 },
+        { id: 11, name: "피자나라", category: "피자", rating: 4.5, reviews: 87, distance: "2.0km", deliveryFee: "2,000원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'pizza', 1), matchPercentage: 89 },
+        { id: 12, name: "도미노피자", category: "피자", rating: 4.3, reviews: 156, distance: "1.7km", deliveryFee: "3,000원", deliveryTime: "25-35분", image: getCategoryImageUrl(null, 'pizza', 2), matchPercentage: 84 },
+        { id: 23, name: "화덕피자 본점", category: "피자", rating: 4.7, reviews: 201, distance: "1.4km", deliveryFee: "3,500원", deliveryTime: "30-40분", image: getCategoryImageUrl(null, 'pizza', 3), matchPercentage: 91 },
       ],
       cafe: [
-        { id: 13, name: "스타벅스", category: "카페", rating: 4.6, reviews: 324, distance: "0.8km", deliveryFee: "1,500원", deliveryTime: "10-20분", image: getCategoryImageUrl(null, 'cafe'), matchPercentage: 91 },
-        { id: 14, name: "투썸플레이스", category: "카페", rating: 4.4, reviews: 267, distance: "1.1km", deliveryFee: "2,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'cafe'), matchPercentage: 86 },
+        { id: 13, name: "스타벅스", category: "카페", rating: 4.6, reviews: 324, distance: "0.8km", deliveryFee: "1,500원", deliveryTime: "10-20분", image: getCategoryImageUrl(null, 'cafe', 1), matchPercentage: 91 },
+        { id: 14, name: "투썸플레이스", category: "카페", rating: 4.4, reviews: 267, distance: "1.1km", deliveryFee: "2,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'cafe', 2), matchPercentage: 86 },
+        { id: 24, name: "디저트 라운지", category: "카페", rating: 4.7, reviews: 178, distance: "1.3km", deliveryFee: "2,500원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'cafe', 3), matchPercentage: 88 },
       ],
       fastfood: [
-        { id: 15, name: "맥도날드", category: "패스트푸드", rating: 4.2, reviews: 456, distance: "1.4km", deliveryFee: "2,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'fastfood'), matchPercentage: 82 },
-        { id: 16, name: "버거킹", category: "패스트푸드", rating: 4.1, reviews: 298, distance: "1.6km", deliveryFee: "2,500원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'fastfood'), matchPercentage: 80 },
+        { id: 15, name: "맥도날드", category: "패스트푸드", rating: 4.2, reviews: 456, distance: "1.4km", deliveryFee: "2,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'fastfood', 1), matchPercentage: 82 },
+        { id: 16, name: "버거킹", category: "패스트푸드", rating: 4.1, reviews: 298, distance: "1.6km", deliveryFee: "2,500원", deliveryTime: "20-30분", image: getCategoryImageUrl(null, 'fastfood', 2), matchPercentage: 80 },
+        { id: 25, name: "쉐이크쉑", category: "패스트푸드", rating: 4.5, reviews: 367, distance: "1.0km", deliveryFee: "3,000원", deliveryTime: "15-25분", image: getCategoryImageUrl(null, 'fastfood', 3), matchPercentage: 85 },
       ],
     };
     return restaurantData[categoryId] || [];

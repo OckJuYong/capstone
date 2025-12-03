@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { restaurantService, dibsService, reviewService } from '../../services';
-import { getImageUrl, DEFAULT_MENU_IMAGE } from '../../constants/images';
+import { getImageUrl, getMenuImage, getRestaurantImage } from '../../constants/images';
 
 export default function RestaurantDetailNew({ route, navigation }) {
   const { restaurant } = route.params || {};
@@ -35,7 +35,7 @@ export default function RestaurantDetailNew({ route, navigation }) {
       console.log(`✅ ${menusData.length}개 메뉴 로드 완료`);
       console.log(`✅ ${reviewsData.length}개 리뷰 로드 완료`);
 
-      // 식당 정보 설정
+      // 식당 정보 설정 (ID 기반으로 다양한 이미지)
       setRestaurantInfo({
         ...detailData,
         id: detailData.restaurantId,
@@ -47,7 +47,7 @@ export default function RestaurantDetailNew({ route, navigation }) {
         deliveryFee: "3,000원",
         minOrder: "15,000원",
         deliveryTime: "25-35분",
-        image: getImageUrl(detailData.image || detailData.imageUrl, 'large'),
+        image: detailData.image || detailData.imageUrl || getRestaurantImage(detailData.restaurantId),
         matchPercentage: Math.floor(85 + Math.random() * 15),
         description: `${detailData.restaurantName} 맛집입니다.`,
         hours: "11:00 - 22:00",
@@ -63,14 +63,14 @@ export default function RestaurantDetailNew({ route, navigation }) {
         },
       });
 
-      // 메뉴 정보 설정
+      // 메뉴 정보 설정 (각 메뉴 ID별로 다른 이미지)
       setMenuData(menusData.map((menu, index) => ({
         ...menu,
         id: menu.menuId,
         name: menu.menuName,
         description: menu.menuDescription || "맛있는 메뉴입니다",
         price: menu.menuPrice || 15000,
-        image: menu.image || menu.imageUrl || DEFAULT_MENU_IMAGE,
+        image: menu.image || menu.imageUrl || getMenuImage(menu.menuId),
         popular: index < 2, // 처음 2개를 인기 메뉴로
         matchPercentage: Math.floor(80 + Math.random() * 20),
         tasteFactors: {

@@ -35,7 +35,7 @@ export default function HomeUpdated({ navigation }) {
         name: restaurant.restaurantName,
         category: "식당",
         rating: parseFloat((4.5 + Math.random() * 0.5).toFixed(1)), // 소수점 1자리
-        image: getImageUrl(restaurant.image || restaurant.imageUrl, 'medium'),
+        image: getImageUrl(restaurant.image || restaurant.imageUrl, 'medium', restaurant.restaurantId),
         tags: ["맛있음", "추천"],
         matchPercentage: Math.floor(85 + Math.random() * 15),
       }));
@@ -51,7 +51,7 @@ export default function HomeUpdated({ navigation }) {
         reviews: Math.floor(50 + Math.random() * 150),
         distance: `${(Math.random() * 3 + 0.5).toFixed(1)}km`,
         deliveryTime: "20-30분",
-        image: getImageUrl(restaurant.image || restaurant.imageUrl, 'small'),
+        image: getImageUrl(restaurant.image || restaurant.imageUrl, 'small', restaurant.restaurantId),
       }));
       setTrendingRestaurants(trending);
 

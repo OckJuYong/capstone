@@ -1,11 +1,12 @@
 // dd 스타일을 적용한 회원가입 페이지 (dd에는 별도 signup 페이지가 없어서 Login 스타일 기반으로 구현)
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { ScreenLayout } from '../layout';
 import { Button, Input } from '../ui';
 import { AppHeader } from '../layout/Header';
 import { lightThemeConfig } from '../../theme';
 import { authService } from '../../services';
+import { showAlert } from '../../utils/alert';
 
 export default function SignupNew({ navigation }) {
   const [formData, setFormData] = useState({
@@ -110,8 +111,8 @@ export default function SignupNew({ navigation }) {
 
       console.log('✅ 회원가입 성공! Token:', token ? '존재' : '없음');
 
-      // 회원가입 성공 - 맛 프로필 설정 화면으로 이동
-      Alert.alert(
+      // 회원가입 성공 - 맛 프로필 설정 화면으로 이동 (웹/앱 호환)
+      showAlert(
         '회원가입 성공',
         '환영합니다! 당신의 입맛을 알려주세요.',
         [
@@ -146,7 +147,7 @@ export default function SignupNew({ navigation }) {
         errorMessage = error.message;
       }
 
-      Alert.alert('회원가입 실패', errorMessage);
+      showAlert('회원가입 실패', errorMessage);
     } finally {
       setLoading(false);
     }

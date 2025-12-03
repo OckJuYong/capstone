@@ -1,10 +1,11 @@
 // dd/app/login/page.tsx를 React Native로 100% 정확히 변환
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { ScreenLayout } from '../layout';
 import { Button, Input } from '../ui';
 import { lightThemeConfig } from '../../theme';
-import { authService } from '../../services';
+import { authService, userService } from '../../services';
+import { showAlert } from '../../utils/alert';
 
 export default function LoginNew({ navigation }) {
   const [id, setId] = useState('');
@@ -17,7 +18,7 @@ export default function LoginNew({ navigation }) {
   const handleLogin = async () => {
     // 유효성 검사
     if (!id || !password) {
-      Alert.alert('로그인 실패', '이메일과 비밀번호를 입력해주세요.');
+      showAlert('로그인 실패', '이메일과 비밀번호를 입력해주세요.');
       return;
     }
 
@@ -31,18 +32,62 @@ export default function LoginNew({ navigation }) {
 
       console.log('✅ 로그인 성공! Token:', token ? '존재' : '없음');
 
-      // 로그인 성공 - 홈 화면으로 이동
-      navigation.replace('Home');
+      // 맛 프로필 확인 - 없으면 온보딩으로
+      try {
+        const tastes = await userService.getMyTastes();
+        console.log('👅 맛 프로필 응답:', JSON.stringify(tastes));
+
+        // 맛 프로필 유효성 체크
+        // 1. tastes가 null/undefined
+        // 2. tastes가 빈 객체 {}
+        // 3. 모든 값이 0 또는 null
+        const hasTasteProfile = tastes &&
+          typeof tastes === 'object' &&
+          Object.keys(tastes).length > 0 &&
+          Object.values(tastes).some(v => v !== null && v !== undefined && v > 0);
+
+        console.log('👅 맛 프로필 존재 여부:', hasTasteProfile);
+
+        if (hasTasteProfile) {
+          console.log('✅ 기존 사용자 - Home으로 이동');
+          navigation.replace('Home');
+        } else {
+          console.log('🆕 첫 사용자 - 온보딩(Intro)으로 이동');
+          navigation.replace('Intro');
+        }
+      } catch (tasteError) {
+        console.log('⚠️ 맛 프로필 조회 실패:', JSON.stringify(tasteError, null, 2));
+
+        // apiClient에서 변환된 에러: { status, message, data }
+        const tasteStatus = tasteError.status || tasteError.response?.status;
+
+        // 404 에러 = 맛 프로필이 없는 것 = 첫 사용자
+        // 또는 맛 프로필 조회 실패 시 온보딩으로 (안전한 방향)
+        if (tasteStatus === 404 || !tasteStatus) {
+          console.log('🆕 맛 프로필 없음 - 온보딩으로 이동');
+          navigation.replace('Intro');
+        } else {
+          // 401(토큰만료) 등 인증 관련 에러는 다시 로그인
+          console.log('⚠️ 기타 에러 (status:', tasteStatus, ') - 온보딩으로 이동');
+          navigation.replace('Intro');
+        }
+      }
 
     } catch (error) {
-      console.error('❌ 로그인 오류:', error);
+      console.error('❌ 로그인 오류:', JSON.stringify(error, null, 2));
 
       // 에러 메시지 처리
       let errorMessage = '로그인 중 문제가 발생했습니다.';
 
-      if (error.response) {
-        // 백엔드 응답이 있는 경우
-        switch (error.response.status) {
+      // apiClient에서 변환된 에러 형식: { status, message, data }
+      const status = error.status || error.response?.status;
+      const message = error.message || error.response?.data?.message;
+
+      if (status) {
+        switch (status) {
+          case 0:
+            errorMessage = '네트워크 연결을 확인해주세요.';
+            break;
           case 401:
             errorMessage = '이메일 또는 비밀번호가 잘못되었습니다.';
             break;
@@ -53,13 +98,13 @@ export default function LoginNew({ navigation }) {
             errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
             break;
           default:
-            errorMessage = error.response.data?.message || '로그인에 실패했습니다.';
+            errorMessage = message || '로그인에 실패했습니다.';
         }
-      } else if (error.message) {
-        errorMessage = error.message;
+      } else if (message) {
+        errorMessage = message;
       }
 
-      Alert.alert('로그인 실패', errorMessage);
+      showAlert('로그인 실패', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -67,14 +112,14 @@ export default function LoginNew({ navigation }) {
 
   // dd: 카카오 로그인 처리
   const handleKakaoLogin = () => {
-    Alert.alert('카카오 로그인', '카카오 로그인 기능이 구현되었습니다.');
+    showAlert('카카오 로그인', '카카오 로그인 기능이 구현되었습니다.');
     // 임시로 로그인 성공 처리
     navigation.navigate('Home');
   };
 
-  // dd: 구글 로그인 처리  
+  // dd: 구글 로그인 처리
   const handleGoogleLogin = () => {
-    Alert.alert('구글 로그인', '구글 로그인 기능이 구현되었습니다.');
+    showAlert('구글 로그인', '구글 로그인 기능이 구현되었습니다.');
     // 임시로 로그인 성공 처리
     navigation.navigate('Home');
   };
